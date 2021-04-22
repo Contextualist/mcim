@@ -1,0 +1,55 @@
+name: Build Releases
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  build:
+    name: Build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-musl
+            os: ubuntu-latest
+            zipcmd: zip mcim-x86_64-unknown-linux-musl.zip mcim
+          - target: x86_64-pc-windows-msvc
+            os: windows-latest
+            suffix: .exe
+            zipcmd: powershell Compress-Archive mcim.exe mcim-x86_64-pc-windows-msvc.zip
+          - target: x86_64-apple-darwin
+            os: macos-latest
+            zipcmd: zip mcim-x86_64-apple-darwin.zip mcim
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          target: ${{ matrix.target }}
+          override: true
+
+      - name: Build
+        uses: actions-rs/cargo@v1
+        with:
+          use-cross: false
+          command: build
+          args: --release --target=${{ matrix.target }}
+
+      - name: Pack up
+        shell: bash
+        run: |
+          mv target/${{ matrix.target }}/release/mcim${{ matrix.suffix }} .
+          ${{ matrix.zipcmd }}
+
+      - name: Upload Github Assets
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: mcim-${{ matrix.target }}.zip
+          prerelease: ${{ contains(github.ref, '-') }}
