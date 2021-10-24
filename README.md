@@ -15,4 +15,4 @@ Based on [Ising2D](https://github.com/OpenSourcePhysics/STP/blob/master/src/org/
 * size: linear dimension of lattice
 * step: total simulation step to run; measured in terms of Monte Carlo steps per spin
 
-Output will be a CSV file in which each row includes the average energy (per spin) and average magnetization (per spin) at that step.
+The simulation will start from a paramagnetic (randomized) initial state. Output will be a CSV file in which each row includes the average energy (per spin) and average magnetization (per spin) at that step.
