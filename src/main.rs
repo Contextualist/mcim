@@ -6,7 +6,6 @@ use std::{
     io::{BufWriter, Write},
 };
 use std::env;
-use std::convert::TryInto;
 
 fn main() -> std::io::Result<()> {
     let args: Vec<String> = env::args().collect();

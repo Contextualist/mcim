@@ -2,9 +2,9 @@
 name = "mcim"
 version = "0.1.0"
 authors = ["Harry Zhang <zhanghar@iu.edu>"]
-edition = "2018"
+edition = "2021"
 license = "MIT"
 
 [dependencies]
 pbr = "1.0.4"
-rand = { version = "0.8.3", features = ["small_rng"] }
+rand = { version = "0.8.4", features = ["small_rng"] }
